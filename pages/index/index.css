@@ -1,0 +1,51 @@
+.layui-bg-main {
+    background-color: #FF194A !important;
+}
+
+.layui-bg-xhmm {
+    background-color: #ff6f8e !important;
+}
+
+.layui-logo {
+    color: white !important;
+}
+
+/* 头部 */
+
+.layui-layout-admin .layui-header .layui-nav a {
+    color: black !important;
+}
+
+.layui-header .layui-nav .layui-nav-item .layui-nav-mored {
+    margin-top: -9px;
+    border-style: dashed dashed solid;
+    border-color: transparent transparent #FF587C;
+}
+
+.layui-header .layui-nav .layui-nav-more {
+    content: '';
+    width: 0;
+    height: 0;
+    border-style: solid dashed dashed;
+    border-color: #FF587C transparent transparent;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+    position: absolute;
+    top: 50%;
+    right: 2px;
+    margin-top: -4px;
+    border-width: 6px;
+}
+
+/* 左侧 */
+
+
+/* 主体 */
+
+.layui-body {
+    background-color: #eeeeee;
+}
+
+/* 底部 */
