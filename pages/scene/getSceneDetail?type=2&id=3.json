@@ -1,0 +1,26 @@
+{
+    "code": 0,
+    "msg": "success",
+    "data": [
+        {
+            "name": "测试模块1",
+            "position": 1,
+            "courseList": [
+                {
+                    "id": 6,
+                    "courseId": 2,
+                    "name": "月子须知",
+                    "position": 1,
+                    "status": 1
+                },
+                {
+                    "id": 7,
+                    "courseId": 1,
+                    "name": "孕期必读",
+                    "position": 2,
+                    "status": 1
+                }
+            ]
+        }
+    ]
+}

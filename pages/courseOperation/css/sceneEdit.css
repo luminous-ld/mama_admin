@@ -1,0 +1,24 @@
+.course-img {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.course-img-btn {
+    position: absolute;
+    bottom: 0;
+    width: 100px;
+    height: 25px;
+    background-color: rgba(0, 0, 0, .3);
+}
+
+.changeSpan {
+    color: white;
+    margin-right: 10px
+}
+
+.delSpan {
+    color: red;
+    margin-left: 10px
+}

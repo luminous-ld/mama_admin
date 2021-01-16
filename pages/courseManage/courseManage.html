@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>课程管理</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css" />
+    <link rel="stylesheet" href="../common.css" />
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+  </head>
+
+  <body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+      <!-- 头部区域（可配合layui已有的水平导航） -->
+      <div class="layui-header">
+        <div class="layui-logo layui-bg-white">
+          <img
+            src="../../assets/images/avatar_xhmm.png"
+            class="layui-nav-img"
+          />
+          小狐妈妈运营后台
+        </div>
+
+        <ul class="layui-nav layui-layout-right layui-bg-white">
+          <li class="layui-nav-item">
+            <a href="javascript:;">
+              <img
+                src="../../assets/images/avatar_xhmm.png"
+                class="layui-nav-img"
+              />
+              admin
+            </a>
+            <dl class="layui-nav-child">
+              <dd>
+                <a href="">
+                  <i class="layui-icon layui-icon-logout"></i>
+                  退出登录
+                </a>
+              </dd>
+            </dl>
+          </li>
+        </ul>
+      </div>
+
+      <!-- <div class="divider"></div> -->
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <div class="layui-side layui-bg-white">
+        <div class="layui-side-scroll">
+          <ul
+            class="layui-nav layui-nav-tree"
+            lay-filter="test"
+            lay-shrink="all"
+          >
+            <li class="layui-nav-item layui-nav-itemed">
+              <a class="" href="javascript:;">
+                <i
+                  class="layui-icon layui-icon-template-1"
+                  style="margin-right: 2px; color: rgb(97, 97, 97)"
+                ></i>
+                课程管理
+              </a>
+              <dl class="layui-nav-child">
+                <dd class="layui-this">
+                  <a href="javascript:;">
+                    <i
+                      class="layui-icon layui-icon-read"
+                      style="margin-left: 15px; margin-right: 2px"
+                    ></i>
+                    课程管理
+                  </a>
+                </dd>
+              </dl>
+            </li>
+            <li class="layui-nav-item">
+              <a href="javascript:;">
+                <i
+                  class="layui-icon layui-icon-chart-screen"
+                  style="margin-right: 2px; color: rgb(97, 97, 97)"
+                ></i>
+                课程运营
+              </a>
+              <dl class="layui-nav-child">
+                <dd>
+                  <a href="../courseOperation/courseRecommend.html">
+                    <i
+                      class="layui-icon layui-icon-read"
+                      style="margin-left: 15px; margin-right: 2px"
+                    ></i>
+                    课程推荐
+                  </a>
+                </dd>
+                <dd>
+                  <a href="../courseOperation/coursePopularize.html">
+                    <i
+                      class="layui-icon layui-icon-user"
+                      style="margin-left: 15px; margin-right: 2px"
+                    ></i>
+                    课程推广
+                  </a>
+                </dd>
+              </dl>
+            </li>
+            <li class="layui-nav-item">
+              <a href="javascript:;">
+                <i
+                  class="layui-icon layui-icon-list"
+                  style="margin-right: 2px"
+                ></i>
+                产品运营
+              </a>
+              <dl class="layui-nav-child">
+                <dd>
+                  <a href="../productOperation/paperOperation.html">
+                    <i
+                      class="layui-icon layui-icon-dialogue"
+                      style="margin-left: 15px; margin-right: 2px"
+                    ></i>
+                    文案运营
+                  </a>
+                </dd>
+              </dl>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 10px 30px">
+          <span class="layui-breadcrumb">
+            <a href="">课程管理</a>
+            <a><cite>课程管理</cite></a>
+          </span>
+          <div class="title">已上线</div>
+          <table id="focusPic" lay-filter="test"></table>
+          <div class="title">未上线</div>
+          <table id="courseModule" lay-filter="test"></table>
+        </div>
+      </div>
+    </div>
+    <script src="../../layui/layui.js"></script>
+    <script src="./js/courseManage.js"></script>
+    <script type="text/html" id="operateBar">
+      <a class="layui-btn layui-btn-radius layui-btn-xs" lay-event="edit"
+        >编辑</a
+      >
+      <a
+        class="layui-btn layui-btn-radius layui-btn-warm layui-btn-xs"
+        lay-event="del"
+        >下线</a
+      >
+    </script>
+  </body>
+</html>

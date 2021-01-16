@@ -2137,7 +2137,7 @@ hr {
     height: 38px;
     line-height: 38px;
     padding: 0 18px;
-    background-color: #009688;
+    background-color: #25bdbd;
     color: #fff;
     white-space: nowrap;
     text-align: center;
@@ -2210,7 +2210,7 @@ hr {
 }
 
 .layui-btn-danger {
-    background-color: #FF5722
+    background-color: #ff2222
 }
 
 .layui-btn-checked {
@@ -4048,14 +4048,14 @@ body .layui-table-tips .layui-layer-content {
     right: 3px;
     margin-top: -4px;
     border-width: 6px;
-    border-top-color: rgba(255, 255, 255, .7)
+    border-top-color: rgba(0, 0, 0, .7)
 }
 
 .layui-nav .layui-nav-mored,
 .layui-nav-itemed>a .layui-nav-more {
     margin-top: -9px;
     border-style: dashed dashed solid;
-    border-color: transparent transparent #fff
+    border-color: transparent transparent rgba(0, 0, 0, .7)
 }
 
 .layui-nav-child {

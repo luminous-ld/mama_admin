@@ -1,0 +1,121 @@
+.layui-bg-white {
+    background-color: white;
+}
+
+.divider {
+    width: 100vw;
+    height: 1px;
+    background-color: #ccc;
+}
+
+/* header 背景 */
+.layui-layout-admin .layui-header {
+    background-color: #fff;
+    -webkit-box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
+    box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
+}
+
+/* 左上角logo */
+.layui-layout-admin .layui-logo {
+    color: #fc204f;
+}
+
+/* 右上角 */
+.layui-nav .layui-nav-item a {
+    color: black;
+}
+
+/* 导航栏底部bar的颜色 */
+.layui-nav .layui-this:after,
+.layui-nav-bar,
+.layui-nav-tree .layui-nav-itemed:after {
+    background-color: #fc204f;
+}
+
+/* 鼠标经过导航栏字体颜色 */
+.layui-nav .layui-nav-item a:hover,
+.layui-nav .layui-this a {
+    color: black;
+}
+
+/* 左侧栏 */
+.layui-side {
+    /* border-top: 1px solid #ccc; */
+    /* border-right: 1px solid #ccc; */
+    -webkit-box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
+    box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
+    text-align: center;
+}
+
+.layui-nav {
+    background-color: #fff;
+}
+
+/* 选中的导航标题字体颜色 */
+.layui-nav-tree .layui-nav-itemed a {
+    color: black !important;
+}
+
+.layui-nav-tree .layui-nav-child dd.layui-this,
+.layui-nav-tree .layui-nav-child dd.layui-this a,
+.layui-nav-tree .layui-this,
+.layui-nav-tree .layui-this>a,
+.layui-nav-tree .layui-this>a:hover {
+    background-color: #f3efef;
+    color: #fc204f !important;
+}
+
+.layui-nav-tree .layui-nav-item a,
+.layui-nav-tree .layui-nav-itemed a {
+    padding: 10px 0;
+}
+
+.layui-nav-tree .layui-nav-item a:hover {
+    background-color: #ffa1b5af;
+}
+
+.layui-nav-itemed>.layui-nav-child {
+    background-color: rgb(243, 239, 239) !important;
+}
+
+.layui-nav-tree .layui-nav-bar {
+    background-color: #fc204f;
+}
+
+/* 主体 */
+.layui-layout-admin .layui-body {
+    bottom: 0;
+}
+
+/* 面包屑 */
+.layui-breadcrumb a:hover {
+    color: #fc204f !important;
+}
+
+/* 表格 */
+.layui-table-header .layui-table {
+    width: 100%;
+}
+.layui-table td,
+.layui-table th {
+    text-align: center;
+}
+.layui-table th {
+    font-weight: 700;
+}
+.layui-table-body,
+.layui-table-box,
+.layui-table-cell {
+    overflow: visible;
+    height: max-content;
+}
+
+.layui-form-select dl dd.layui-this {
+    background-color: #ff4d73;
+}
+
+.layui-body .title {
+    margin-top: 10px;
+    font-size: 24px;
+    font-weight: 700;
+}
