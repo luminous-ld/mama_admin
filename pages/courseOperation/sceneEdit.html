@@ -137,13 +137,104 @@
             <a><cite>场景编辑</cite></a>
           </span>
           <!-- 编辑表格 -->
-          <table
-            class="layui-table"
-            id="sceneEdit"
-            lay-filter="sceneEdit"
-          ></table>
-          <!-- 添加按钮 -->
-          <div
+          <div id="sceneEdit">
+            <!-- type == 1 -->
+            <table v-if="type==1" class="layui-table">
+              <thead>
+                <tr>
+                  <td>序号</td>
+                  <td>课程</td>
+                  <td>推广标题</td>
+                  <td>推广封面图</td>
+                  <td>操作</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in sceneDetail" :key="item.id">
+                  <!-- 序号 -->
+                  <td>{{item.position}}</td>
+                  <!-- 课程下拉框 -->
+                  <td>
+                    <select name="courseName" lay-filter="courseName">
+                      <option value="item.title">{{item.title}}</option>
+                    </select>
+                  </td>
+                  <!-- 推广标题可编辑 -->
+                  <td contenteditable="true">
+                    {{item.title}}
+                  </td>
+                  <!-- 推广封面图 -->
+                  <td>
+                    <div class="course-img">
+                      <img :src="item.coverUrl" alt="推广封面图" />
+                      <div class="course-img-btn">
+                        <span id="changeSpan" class="changeSpan" @click="changePic($event)">替换</span>
+                        <span id="delSpan" class="delSpan" @click="delPic($event)">删除</span>
+                      </div>
+                    </div>            
+                  </td>
+                  <!-- 操作按钮 -->
+                  <td>
+                    <a 
+                    class="layui-btn layui-btn-radius layui-btn-xs layui-btn-danger"
+                    @click="delRow($event)"
+                    >删除</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>  
+            <!-- type == 2 -->
+            <table v-else-if="type==2" class="layui-table">
+              <thead>
+                <tr>
+                  <td>序号</td>
+                  <td>分类标题</td>
+                  <td>课程</td>
+                  <td>操作</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in sceneDetail" :key="item.name">
+                  <!-- 序号 -->
+                  <td>{{item.position}}</td>
+                  <!-- 分类标题可编辑 -->
+                  <td contenteditable="true">
+                    {{item.name}}
+                  </td>
+                  <!-- 课程下拉框和已有课程 -->
+                  <td>
+                    <select name="courseName" lay-filter="courseName">
+                      <option value="">----请选择----</option>
+                      <option value="">月子须知</option>
+                      <option value="">孕期必读</option>
+                    </select>
+                    <div 
+                      class="layui-btn-container tag"  
+                      lay-filter="demo" 
+                      lay-allowclose="true"
+                    >
+                      <button
+                        v-for="list in item.courseList"
+                        :key="list.id"
+                        lay-id="11"
+                        type="button" 
+                        class="tag-item"
+                      >{{list.name}}</button>
+                    </div>
+                  </td>
+                  <!-- 操作按钮 -->
+                  <td>
+                    <a 
+                    class="layui-btn layui-btn-radius layui-btn-xs layui-btn-danger"
+                    @click="delRow($event)"
+                    >删除</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table> 
+          </div>
+            <!-- 添加按钮 -->
+            <div
             style="
               display: flex;
               flex-direction: column;
@@ -174,41 +265,10 @@
       </div>
     </div>
 
-    <!-- 操作工具栏模板 -->
-    <script type="text/html" id="operateBar">
-      <a
-        class="layui-btn layui-btn-radius layui-btn-xs layui-btn-danger"
-        lay-event="del"
-        >删除</a
-      >
-    </script>
-
-    <!-- 下拉框模板 -->
-    <script type="text/html" id="selectCourse">
-      <select name="courseName" lay-filter="courseName">
-        <option value="{{d.coursename}}">{{d.coursename}}</option>
-      </select>
-    </script>
-
-    <!-- 推广标题模板 -->
-    <script type="text/html" id="popuTitle">
-      <input type="text" placeholder="{{d.title}}">
-    </script>
-
-    <!-- 推广封面图模板 -->
-    <script type="text/html" id="courseImg">
-      <div class="course-img">
-        <img src="{{d.imgUrl}}" alt="" />
-        <div class="course-img-btn">
-          <span class="changeSpan">替换</span>
-          <span class="delSpan">删除</span>
-        </div>
-      </div>
-    </script>
 
     <!-- 引入的js -->
     <script src="../../layui/layui.all.js"></script>
     <script type="module" src="../common.js"></script>
-    <script src="./js/sceneEdit.js"></script>
+    <script type="module" src="./js/sceneEdit.js"></script>
   </body>
 </html>

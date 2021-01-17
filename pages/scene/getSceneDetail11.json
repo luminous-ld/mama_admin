@@ -1,0 +1,22 @@
+{
+    "code": 0,
+    "msg": "success",
+    "data": [
+        {
+            "id": 3,
+            "position": 1,
+            "title": "孕期必读",
+            "courseId": 1,
+            "coverUrl": "https://xiaohumama-image.cdn.sohu.com/1.课程封面图.jpg",
+            "status": 1
+        },
+        {
+            "id": 4,
+            "position": 2,
+            "title": "月子期必读",
+            "courseId": 2,
+            "coverUrl": "https://xiaohumama-image.cdn.sohu.com/2.课程封面图.jpg",
+            "status": 1
+        }
+    ]
+}
