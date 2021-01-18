@@ -15,16 +15,23 @@ var tableScene = new Vue({
     },
     methods: {
         delRow(e) {
-            console.log(e);
+            console.log("row: " + e.path[2].dataset.rowindex);
+            let rowIndex = e.path[2].dataset.rowindex;
         },
         delPic(e) {
-            console.log(e);
+            console.log("row: " + e.path[4].dataset.rowindex);
+            let rowIndex = e.path[4].dataset.rowindex;
         },
         changePic(e) {
-            console.log(e);
-
-
+            console.log("row: " + e.path[5].dataset.rowindex);
+            let rowIndex = e.path[5].dataset.rowindex - 1;
+            console.log(e.target.files[0]);
+            let file = e.target.files[0];
+            previewPic(file, rowIndex);
         }
+    },
+    mounted() {
+
     },
 })
 
@@ -34,25 +41,20 @@ window.addEventListener('load', function () {
     // 获取场景详情请求
     getSceneDetail(id, type);
 
-    
-    //选完文件后不自动上传
-    layui.use('upload', function () {
-        upload.render({
-            elem: '#changeSpan',
-            url: 'https://httpbin.org/post' //改成您自己的上传接口
-            ,
-            auto: false
-            //,multiple: true
-            ,
-            bindAction: '#delSpan',
-            done: function (res) {
-                layer.msg('上传成功');
-                console.log(res)
-            }
-        });
-    })
-    
+
+
+
 })
+
+// 预览图片
+function previewPic(file, row) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function (e) {
+        tableScene.$data.sceneDetail[row].coverUrl = e.target.result;
+    };
+}
+
 
 //动态插入 selector 的 option
 function insertSelectOption(form) {

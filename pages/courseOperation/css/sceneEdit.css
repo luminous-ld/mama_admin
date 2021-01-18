@@ -13,10 +13,24 @@
     background-color: rgba(0, 0, 0, .3);
 }
 
+.course-img-btn .btn {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+}
+
+.course-img-btn .change-btn input {
+    position: absolute;
+    transform: scaleX(0.18);
+    left: -108px;
+    top: -1px;
+    cursor: pointer;
+    opacity: 0;
+}
+
 .changeSpan {
     color: white;
     margin-right: 10px;
-    cursor: pointer;
 }
 
 .delSpan {

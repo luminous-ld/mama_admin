@@ -150,7 +150,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in sceneDetail" :key="item.id">
+                <tr v-for="item in sceneDetail" :key="item.id" :data-rowindex="item.position">
                   <!-- 序号 -->
                   <td>{{item.position}}</td>
                   <!-- 课程下拉框 -->
@@ -168,7 +168,10 @@
                     <div class="course-img">
                       <img :src="item.coverUrl" alt="推广封面图" />
                       <div class="course-img-btn">
-                        <span id="changeSpan" class="changeSpan" @click="changePic($event)">替换</span>
+                        <label class="change-btn" type="button">                                                    
+                          <span id="changeSpan" class="changeSpan">替换</span>
+                          <input type="file" @change="changePic($event)"/>
+                        </label>
                         <span id="delSpan" class="delSpan" @click="delPic($event)">删除</span>
                       </div>
                     </div>            
