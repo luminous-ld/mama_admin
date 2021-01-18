@@ -15,15 +15,20 @@ var tableScene = new Vue({
     },
     methods: {
         delRow(e) {
-            console.log("row: " + e.path[2].dataset.rowindex);
-            let rowIndex = e.path[2].dataset.rowindex;
-        },
-        delPic(e) {
-            console.log("row: " + e.path[4].dataset.rowindex);
-            let rowIndex = e.path[4].dataset.rowindex;
+            console.log("delete row: " + e.path[2].dataset.rowindex);
+            let rowIndex = e.path[2].dataset.rowindex -1;
+            let that = this;
+            layer.confirm('确认删除该行吗？', {
+                    title: '删除提示',
+                },
+                function (index) {
+                    that.sceneDetail.splice(rowIndex, 1);
+                    layer.close(index); // 关闭当前 layer 
+                });
+            console.log("上线了", data);
         },
         changePic(e) {
-            console.log("row: " + e.path[5].dataset.rowindex);
+            console.log("change picture in row: " + e.path[5].dataset.rowindex);
             let rowIndex = e.path[5].dataset.rowindex - 1;
             console.log(e.target.files[0]);
             let file = e.target.files[0];
@@ -41,9 +46,6 @@ window.addEventListener('load', function () {
     // 获取场景详情请求
     getSceneDetail(id, type);
 
-
-
-
 })
 
 // 预览图片
@@ -53,6 +55,11 @@ function previewPic(file, row) {
     reader.onload = function (e) {
         tableScene.$data.sceneDetail[row].coverUrl = e.target.result;
     };
+}
+
+// 上传图片
+function uploadPic() {
+
 }
 
 
