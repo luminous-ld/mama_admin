@@ -5,6 +5,7 @@
         {
             "id": 3,
             "position": 1,
+            "courseName": "孕期必读",
             "title": "孕期必读",
             "courseId": 1,
             "coverUrl": "https://xiaohumama-image.cdn.sohu.com/1.课程封面图.jpg",
@@ -13,6 +14,7 @@
         {
             "id": 4,
             "position": 2,
+            "courseName": "月子期必读",
             "title": "月子期必读",
             "courseId": 2,
             "coverUrl": "https://xiaohumama-image.cdn.sohu.com/2.课程封面图.jpg",

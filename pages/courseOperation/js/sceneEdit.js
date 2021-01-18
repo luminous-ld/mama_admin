@@ -25,7 +25,6 @@ var tableScene = new Vue({
                     that.sceneDetail.splice(rowIndex, 1);
                     layer.close(index); // 关闭当前 layer 
                 });
-            console.log("上线了", data);
         },
         changePic(e) {
             console.log("change picture in row: " + e.path[5].dataset.rowindex);

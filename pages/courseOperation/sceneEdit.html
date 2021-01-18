@@ -156,17 +156,17 @@
                   <!-- 课程下拉框 -->
                   <td>
                     <select name="courseName" lay-filter="courseName">
-                      <option value="item.title">{{item.title}}</option>
+                      <option value="item.courseName">{{item.courseName}}</option>
                     </select>
                   </td>
                   <!-- 推广标题可编辑 -->
-                  <td contenteditable="true">
-                    {{item.title}}
+                  <td>
+                    <input v-model="item.title" />
                   </td>
                   <!-- 推广封面图 -->
                   <td>
                     <div class="course-img">
-                      <img :src="item.coverUrl" alt="推广封面图" />
+                      <img :src="item.coverUrl" alt="请选择图片" />
                       <div class="course-img-btn">
                         <label class="change-btn" type="button">                                                    
                           <span id="changeSpan" class="changeSpan">替换</span>
