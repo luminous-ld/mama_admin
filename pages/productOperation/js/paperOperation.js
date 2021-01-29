@@ -1,5 +1,8 @@
 import {
-    formatCreateTimeAndUpdateTime
+    formatCreateTimeAndUpdateTime,
+    serverUrl,
+    upOrDownBtn,
+    editBtn,
 } from '../../util.js';
 
 // 文案场景表格 vue 实例
@@ -12,9 +15,12 @@ var tablePaper = new Vue({
         edit(e) {
             editBtn(e, this.paperData);
         },
-        upOrDown(status, e) {
-            upOrDownBtn(status, e, this.paperData);
+        upOrDown(status, index) {
+            upOrDownBtn(status, index, this.paperData);
         },
+    },
+    created() {
+        getData(3, this);
     },
 })
 
@@ -23,7 +29,10 @@ var tablePaper = new Vue({
 // type: 1-焦点图 2-课程模块  vue: 表格对象实例
 function getData(type, vue) {
     $.ajax({
-        url: "../scene/getSceneListByType" + type + ".json",
+        url: serverUrl + "/scene/getSceneListByType",
+        data: {
+            type: type,
+        },
         dataType: "json",
         type: "get",
         success: res => {
@@ -39,61 +48,4 @@ function getData(type, vue) {
             console.log(res.msg);
         }
     });
-}
-
-// 编辑按钮触发的方法
-// e: 事件handler  data: 按钮所在表格的数据
-function editBtn(e, data) {
-    let rowIndex = e.path[2].rowIndex
-    let type = data[rowIndex - 1].sceneType;
-    console.log("type: " + type);
-    let id = data[rowIndex - 1].id;
-    console.log("id: " + id);
-    window.location.href = './sceneEdit.html?type=' + type + "&id=" + id;
-}
-
-// 上下线按钮触发的方法
-// status: 场景类型 e: 事件handler  data: 按钮所在表格的数据
-function upOrDownBtn(status, e, data) {
-    let rowIndex = e.path[2].rowIndex
-    console.log(rowIndex);
-    let rowData = data[rowIndex - 1];
-    // 判断状态
-    if (status == 1) {
-        // 下线操作
-        down(rowData);
-    } else {
-        // 上线操作
-        up(rowData);
-    }
-}
-
-// 上线操作 data: 操作的那一行数据
-function up(data) {
-    layer.confirm('确认上线该场景吗？', {
-            title: '上线提示',
-        },
-        function (index) {
-            // TODO: 上线请求
-
-            layer.close(index); // 关闭当前 layer 
-        });
-    console.log("上线了", data);
-}
-
-// 下线操作 data: 操作的那一行数据
-function down(data) {
-    layer.confirm('确认下线该场景吗？', {
-            title: '下线提示',
-        },
-        function (index) {
-            // TODO: 下线请求
-
-            layer.close(index); // 关闭当前 layer 
-        });
-    console.log("下线了", data);
-}
-
-window.onload = function () {
-    getData(3, tablePaper);
 }

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../../assets/images/avatar_xhmm.png" rel="icon" type="image/x-icon" />
+    <title>课程推广</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css" />
+    <link rel="stylesheet" href="../common.css" />
+    <link rel="stylesheet" href="./css/stepEdit.css" />
+    <link rel="stylesheet" href="../../dist/animsition.min.css">
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    <script src="../../dist/jquery.animsition.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  </head>
+
+  <body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+      <!-- 头部区域（可配合layui已有的水平导航） -->
+      <div class="layui-header">
+        <div class="layui-logo layui-bg-white">
+          <img
+            src="../../assets/images/avatar_xhmm.png"
+            class="layui-nav-img"
+          />
+          小狐妈妈运营后台
+        </div>
+
+        <ul class="layui-nav layui-layout-right layui-bg-white">
+          <li class="layui-nav-item">
+            <a href="javascript:;">
+              <img
+                src="../../assets/images/avatar_xhmm.png"
+                class="layui-nav-img"
+              />
+              admin
+            </a>
+            <dl class="layui-nav-child">
+              <dd>
+                <a class="logout">
+                  <i class="layui-icon layui-icon-logout"></i>
+                  退出登录
+                </a>
+              </dd>
+            </dl>
+          </li>
+        </ul>
+      </div>
+
+      <!-- <div class="divider"></div> -->
+      <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+      <div class="layui-side layui-bg-white">
+        <div class="layui-side-scroll">
+          <ul
+            class="layui-nav layui-nav-tree"
+            lay-filter="test"
+            lay-shrink="all"
+          >
+            <li class="layui-nav-item">
+              <a class="" href="javascript:;">
+                <i
+                  class="layui-icon layui-icon-template-1"
+                  style="margin-right: 2px; color: rgb(97, 97, 97)"
+                ></i>
+                课程管理
+              </a>
+              <dl class="layui-nav-child">
+                <dd>
+                  <a href="../courseManage/courseManage.html">
+                    <i
+                      class="layui-icon layui-icon-read"
+                      style="margin-left: 15px; margin-right: 2px"
+                    ></i>
+                    课程管理
+                  </a>
+                </dd>
+              </dl>
+            </li>
+            <li class="layui-nav-item layui-nav-itemed">
+              <a href="javascript:;">
+                <i
+                  class="layui-icon layui-icon-chart-screen"
+                  style="margin-right: 2px; color: rgb(97, 97, 97)"
+                ></i>
+                课程运营
+              </a>
+              <dl class="layui-nav-child">
+                <dd class="layui-this">
+                  <a href="javascript:;">
+                    <i
+                      class="layui-icon layui-icon-read"
+                      style="margin-left: 15px; margin-right: 2px"
+                    ></i>
+                    课程推荐
+                  </a>
+                </dd>
+                <dd>
+                  <a href="../courseOperation/coursePopularize.html">
+                    <i
+                      class="layui-icon layui-icon-user"
+                      style="margin-left: 15px; margin-right: 2px"
+                    ></i>
+                    课程推广
+                  </a>
+                </dd>
+              </dl>
+            </li>
+            <li class="layui-nav-item">
+              <a href="javascript:;">
+                <i
+                  class="layui-icon layui-icon-list"
+                  style="margin-right: 2px"
+                ></i>
+                产品运营
+              </a>
+              <dl class="layui-nav-child">
+                <dd>
+                  <a href="../productOperation/paperOperation.html">
+                    <i
+                      class="layui-icon layui-icon-dialogue"
+                      style="margin-left: 15px; margin-right: 2px"
+                    ></i>
+                    文案运营
+                  </a>
+                </dd>
+              </dl>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 10px 30px" class="animsition">
+          <!-- 面包屑 -->
+          <span class="layui-breadcrumb">
+            <a href="./courseRecommend.html" class="animsition-link">课程运营</a>
+            <a href="./courseRecommend.html" class="animsition-link">课程推荐</a>
+            <a><cite>用户特征编辑</cite></a>
+          </span>
+          <!-- 编辑表格 -->
+          <div id="stepEdit">
+            <table class="layui-table">
+              <thead>
+                <tr>
+                  <th style="min-width: 50px;">阶段</th>
+                  <th style="min-width: 170px;">时间区间</th>
+                  <th style="min-width: 150px;">推荐理由</th>
+                  <th style="min-width: 80px;">推荐课程</th>
+                  <th style="min-width: 100px;">同阶段妈妈在学</th>
+                  <th style="min-width: 100px;">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index) in stepDetail" :key="index" :data-rowindex="index + 1">
+                  <!-- 阶段 -->
+                  <td>
+                    {{item.step}}
+                  </td>
+                  <!-- 时间区间 -->
+                  <td>
+                    <!-- 怀孕中 -->
+                    <div v-if="type == 0">
+                      距分娩{{item.startDay}}天 ~ 距分娩{{item.endDay}}天
+                    </div>
+                    <div v-else>
+                      分娩{{item.startDay}}天 ~ 分娩{{item.endDay}}天
+                    </div>
+                  </td>
+                  <!-- 推荐理由 -->
+                  <td>
+                    {{item.recommendContent}}
+                    <div v-for="list in item.recommendList">
+                      {{list.position}}.{{list.title}}：{{list.description}}
+                    </div>
+                  </td>
+                  <!-- 推荐课程 -->
+                  <td>
+                    <div 
+                      class="layui-btn-container"
+                    >
+                      <button
+                        v-for="list in item.recommendCourse"
+                        :key="list.courseId"
+                        :data-index="list.position"
+                        class="layui-btn layui-btn-radius layui-btn-primary layui-btn-sm"
+                      >{{list.courseName}}</button>
+                    </div>
+                  </td>
+                  <!-- 同阶段妈妈在学 -->
+                  <td>
+                    <div 
+                      class="layui-btn-container"
+                    >
+                      <button
+                        v-for="list in item.learningCourse"
+                        :key="list.courseId"
+                        :data-index="list.position"
+                        class="layui-btn layui-btn-radius layui-btn-primary layui-btn-sm"
+                      >{{list.courseName}}</button>
+                    </div>
+                  </td>
+                  <!-- 操作 -->
+                  <td>
+                    <a 
+                    class="layui-btn layui-btn-radius layui-btn-xs layui-btn-nomal"
+                    @click="edit(index)"
+                    >编辑</a>
+                    <a 
+                    class="layui-btn layui-btn-radius layui-btn-xs layui-btn-danger"
+                    @click="delRow(index)"
+                    >删除</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>  
+            <!-- 底部按钮 -->
+            <div
+            style="
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              margin-top: 15px;
+            "
+          >
+              <!-- 添加按钮 -->
+              <div>
+                <a
+                  type="button"
+                  class="layui-btn layui-btn-normal layui-btn-radius"
+                  @click="addRow"
+                >
+                  <i class="layui-icon">&#xe608;</i> 添加
+                </a>
+              </div>
+              <!-- 确定取消按钮 -->
+              <div style="margin-top: 20px">
+                <a
+                  href="./courseRecommend.html"
+                  type="button"
+                  class="layui-btn layui-btn-primary"
+                >
+                  取消
+                </a>
+                <a type="button" class="layui-btn layui-btn-normal" @click="sendRequest"> 确定 </a>
+              </div>
+            </div>
+            <!-- 弹出编辑框 -->
+            <div id="stepUpdate" v-if="isShow">
+              <!-- 时间区间 -->
+              <div class="title">时间区间：</div>
+              <div class="content">
+                <div v-if="type == 0">
+                  距分娩 <input class="startDay" @change="isStartRight($event)" type="text" v-model="stepDetail[step].startDay" /> 天
+                   ---- 
+                   距分娩 <input class="endDay" @change="isEndRight($event)" type="text" v-model="stepDetail[step].endDay" /> 天
+                   <span class="tips">（包含这天）</span>
+                </div>
+                <div v-else>
+                  分娩 <input class="startDay" @change="isStartRight($event)" type="text" v-model="stepDetail[step].startDay" /> 天
+                   ---- 
+                  分娩 <input class="endDay" @change="isEndRight($event)" type="text" v-model="stepDetail[step].endDay" /> 天
+                  <span class="tips">（包含这天）</span>
+                </div>
+              </div>
+              <!-- 推荐理由 -->
+              <div class="title">推荐理由：</div>
+              <table class="layui-table">
+                <tbody>
+                  <tr>
+                    <td colspan="2"><textarea cols="50" rows="2" v-model="stepDetail[step].recommendContent" @change="dataChange"></textarea></td>
+                  </tr>
+                  <tr v-for="list in stepDetail[step].recommendList">
+                    <td style="width: 80px;"><input type="text" v-model="list.title" @change="dataChange"/></td>
+                    <td><textarea cols="50" rows="3" v-model="list.description" @change="dataChange"></textarea></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div>
+                <a
+                  type="button"
+                  class="layui-btn layui-btn-normal layui-btn-radius layui-btn-xs"
+                  @click="addRecommend"
+                  style="width: fit-content;"
+                >
+                  <i class="layui-icon">&#xe608;</i> 添加标题描述行
+                </a>
+                <a
+                  type="button"
+                  class="layui-btn layui-btn-normal layui-btn-radius layui-btn-xs"
+                  @click="delRecommend"
+                  style="width: fit-content;"
+                >
+                  <i class="layui-icon">&#xe608;</i> 删除最后一行
+                </a>
+              </div>
+              <!-- 推荐课程 -->
+              <div>
+                <span class="title">推荐课程</span>
+                <input list="recommend" id="recipt" @change="selectChange($event)" >
+                <datalist id="recommend">
+                    <option v-for="option in courseAll" :value="option.name">
+                </datalist>
+                <span class="tips">（数量限制3个）</span>
+                <div 
+                  class="layui-btn-container"
+                >
+                  <button
+                    v-for="list in stepDetail[step].recommendCourse"
+                    :key="list.courseId"
+                    :data-index="list.position"
+                    class="layui-btn layui-btn-radius layui-btn-primary layui-btn-sm"
+                  >{{list.courseName}}<i @click="closeRecom(list.position)" class="layui-icon layui-icon-close tag-close"></i></button>
+                </div>
+              </div>
+              <!-- 同阶段妈妈在学 -->
+              <div>
+                <span class="title">同阶段妈妈在学</span>
+                <input list="learning" id="leaipt" @change="selectChange($event)">
+                <datalist id="learning">
+                    <option v-for="option in courseAll" :value="option.name">
+                </datalist>
+                <div 
+                  class="layui-btn-container"
+                >
+                  <button
+                    v-for="list in stepDetail[step].learningCourse"
+                    :key="list.courseId"
+                    :data-index="list.position"
+                    class="layui-btn layui-btn-radius layui-btn-primary layui-btn-sm"
+                  >{{list.courseName}}<i @click="closeLearn(list.position)" class="layui-icon layui-icon-close tag-close"></i></button>
+                </div>
+              </div>
+              <!-- 确定取消按钮 -->
+              <div style="margin-top: 10px; display: flex; justify-content: center;">
+                <a
+                  type="button"
+                  class="layui-btn layui-btn-primary"
+                  @click="cancle"
+                >
+                  取消
+                </a>
+                <a type="button" class="layui-btn layui-btn-normal" @click="save"> 确定 </a>
+              </div>
+            </div>
+            <div id="mask"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 引入的js -->
+    <script src="../../layui/layui.all.js"></script>
+    <script type="module" src="../common.js"></script>
+    <script type="module" src="./js/stepEdit.js"></script>
+  </body>
+</html>

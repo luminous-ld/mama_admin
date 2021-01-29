@@ -208,3 +208,256 @@ export function getRequest() {
   }
   return theRequest;
 }
+
+/**
+ * 上下线操作
+ * function: upOrDownBtn, up, down, upOrDownRequest
+ * 只暴露 upOrDownBtn 方法
+ * */
+// 上下线按钮触发的方法
+// status: 场景类型 index: 按钮下标  data: 按钮所在表格的数据
+export function upOrDownBtn(status, index, data) {
+  // 判断状态
+  if (status == 1) {
+    // 下线操作
+    down(data[index]);
+  } else {
+    // 上线操作
+    up(data[index]);
+  }
+}
+
+// 上线操作 data: 操作的那一行数据
+function up(data) {
+  layer.confirm('确认上线该场景吗？', {
+      title: '上线提示',
+    },
+    function (index) {
+      // TODO: 上线请求
+      upOrDownRequest(data);
+      layer.close(index); // 关闭当前 layer 
+    });
+  console.log("上线了", data);
+}
+
+// 下线操作 data: 操作的那一行数据
+function down(data) {
+  layer.confirm('确认下线该场景吗？', {
+      title: '下线提示',
+    },
+    function (index) {
+      // TODO: 下线请求
+      upOrDownRequest(data);
+      layer.close(index); // 关闭当前 layer 
+    });
+  console.log("下线了", data);
+}
+
+// 上下线请求
+function upOrDownRequest(data) {
+  $.ajax({
+    url: serverUrl + "/scene/updateSceneStatus",
+    dataType: "json",
+    data: {
+      id: data.id,
+      // 上下线请求 status： 0-下线操作 1-上线操作
+      status: data.status == 0 ? 1 : 0,
+    },
+    type: "get",
+    success: res => {
+      if (res.code == 0) {
+        layer.msg("操作成功！");
+        // 修改视图层
+        data.status = data.status == 0 ? 1 : 0;
+      } else {
+        layer.alert(res.msg);
+        console.log(res.msg);
+      }
+    },
+    fail: res => {
+      layer.alert(res.msg);
+      console.log(res.msg);
+    }
+  })
+}
+
+// 编辑按钮触发的方法
+// e: 事件handler  data: 按钮所在表格的数据
+export function editBtn(e, data) {
+  let rowIndex = e.target.parentNode.parentNode.dataset.rowindex;
+  let type = data[rowIndex - 1].sceneType;
+  console.log("type: " + type);
+  let id = data[rowIndex - 1].id;
+  console.log("id: " + id);
+  window.location.href = './sceneEdit.html?type=' + type + "&id=" + id;
+}
+
+// 判断对象为空方法
+export function isEmpty(obj) {
+  if (typeof obj == "undefined" || obj == null || obj == "" || Object.keys(obj).length == 0 || obj.length == 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+// 比较两个对象
+export function deepEqual(object1, object2) {
+  const keys1 = Object.keys(object1);
+  const keys2 = Object.keys(object2);
+
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+
+  for (let index = 0; index < keys1.length; index++) {
+    const val1 = object1[keys1[index]];
+    const val2 = object2[keys2[index]];
+    const areObjects = isObject(val1) && isObject(val2);
+    if (areObjects && !deepEqual(val1, val2) ||
+      !areObjects && val1 !== val2) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function isObject(object) {
+  return object != null && typeof object === 'object';
+}
+
+
+// 对象数组排序
+export function sortObjBy(arr, property) {
+  return arr.sort(compare(property));
+}
+
+function compare(property) {
+  return function (a, b) {
+    var value1 = a[property];
+    var value2 = b[property];
+    return value1 - value2;
+  }
+}
+
+/**
+ * 
+ * @param {vue} vue  实例
+ * @param {String} selector  class选择器
+ */
+export function tableDrag(vue, selector) {
+  $(selector).sortable({
+    cursor: "move",
+    delay: 0,
+    items: "tr", //只是tr可以拖动  
+    opacity: 0.8, //拖动时，透明度为0.6  
+    revert: true, //释放时，增加动画  
+  });
+  // $(selector).disableSelection();
+  $(document).bind('sortupdate', '.selector', function (e, ui) {
+    let oldRow = ui.item.context.dataset.rowindex;
+    let newRow = ui.item.context.rowIndex;
+    console.log("oldRow: " + oldRow); // 移动的行的position
+    console.log("newRow: " + newRow); // 移动后的位置行的position
+    // 往上移
+    if (oldRow > newRow) {
+      vue.$data.sceneDetail[oldRow - 1].position = newRow;
+      vue.$data.sceneDetail[oldRow - 1].status = 2;
+      for (let i = newRow - 1; i < oldRow - 1; i++) {
+        vue.$data.sceneDetail[i].position++;
+        vue.$data.sceneDetail[i].status = 2;
+      }
+      console.log(vue.$data.sceneDetail);
+      sortObjBy(vue.$data.sceneDetail, 'position');
+      vue.$data.tableKey++;
+      // console.log(vue.$data.sceneDetail);
+    } else {
+      vue.$data.sceneDetail[oldRow - 1].position = newRow;
+      vue.$data.sceneDetail[oldRow - 1].status = 2;
+      for (let i = oldRow; i < newRow; i++) {
+        vue.$data.sceneDetail[i].position--;
+        vue.$data.sceneDetail[i].status = 2;
+      }
+      console.log(vue.$data.sceneDetail);
+      sortObjBy(vue.$data.sceneDetail, 'position');
+      vue.$data.tableKey++;
+    }
+  });
+}
+
+/**
+ * 
+ * @param {Array} uiList 场景控制ui的数据
+ * @param {Map} originMap 场景原始数据Map
+ */
+
+export function getChangedData(uiList, originMap) {
+  let deleteList = [];
+  let addList = [];
+  let editList = [];
+  let editMap = new Map();
+  let tempMap = new Map(); // 存 stepDetail 去掉新增项后的临时 Map
+  // 找删除项
+  originMap.forEach(value => {
+    if (value.status == 0) {
+      deleteList.push(value);
+    }
+  })
+  console.log("delete: ", deleteList);
+  // 找新增项
+  uiList.forEach(item => {
+    if (!item.hasOwnProperty('id')) {
+      item.status = 1;
+      addList.push(item);
+    } else {
+      tempMap.set(item.id, item);
+    }
+  })
+  console.log("add: ", addList);
+  // 找修改项
+  tempMap.forEach((value, key) => {
+    if (value.status == 2) {
+      value.status = 1;
+      editMap.set(key, value);
+    }
+  })
+  // 对修改项的 subList 做操作
+  editMap.forEach((value, key) => {
+    let obj = originMap.get(key);
+    // 遍历对象属性，如果属性值仍为数组，则加入伪删除项
+    Object.keys(obj).forEach(item => {
+      if (obj[item] instanceof Array) {
+        obj[item].forEach(i => {
+          if (i.status == 0) {
+            value[item].push(i);
+          }
+        })
+      }
+    });
+    editList.push(value);
+  })
+  for (let i in deleteList) {
+    editList.push(deleteList[i]);
+  }
+  for (let j in addList) {
+    editList.push(addList[j]);
+  }
+  console.log("edit: ", editList);
+  return editList;
+}
+
+
+var isTest = true;
+var serverUrl = '';
+var netHeader = {};
+if (isTest) {
+  serverUrl = 'http://10.18.40.209:6019';
+} else {
+  serverUrl = 'zhengshidizhi';
+}
+
+export {
+  serverUrl,
+  netHeader
+};

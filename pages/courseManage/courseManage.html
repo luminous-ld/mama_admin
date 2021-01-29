@@ -3,10 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../../assets/images/avatar_xhmm.png" rel="icon" type="image/x-icon" />
     <title>课程管理</title>
     <link rel="stylesheet" href="../../layui/css/layui.css" />
     <link rel="stylesheet" href="../common.css" />
+    <link rel="stylesheet" href="../../dist/animsition.min.css">
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    <script src="../../dist/jquery.animsition.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </head>
 
   <body class="layui-layout-body">
@@ -32,7 +37,7 @@
             </a>
             <dl class="layui-nav-child">
               <dd>
-                <a href="">
+                <a class="logout">
                   <i class="layui-icon layui-icon-logout"></i>
                   退出登录
                 </a>
@@ -126,15 +131,11 @@
 
       <div class="layui-body">
         <!-- 内容主体区域 -->
-        <div style="padding: 10px 30px">
+        <div style="padding: 10px 30px" class="animsition">
           <span class="layui-breadcrumb">
-            <a href="">课程管理</a>
+            <a href="./courseManage.html">课程管理</a>
             <a><cite>课程管理</cite></a>
           </span>
-          <div class="title">已上线</div>
-          <table id="focusPic" lay-filter="test"></table>
-          <div class="title">未上线</div>
-          <table id="courseModule" lay-filter="test"></table>
         </div>
       </div>
     </div>

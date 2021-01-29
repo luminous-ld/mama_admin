@@ -1,132 +1,119 @@
-//JavaScript代码区域
-layui.use(["table", "element"], function () {
-    var table = layui.table;
+import {
+    formatCreateTimeAndUpdateTime,
+    serverUrl,
+} from '../../util.js';
 
-    //渲染数据表格
-    table.render({
-        elem: "#focusPic",
-        height: 312,
-        url: "../demo.json", //数据接口
-        // page: true,
-        cols: [
-            [
-                //表头
-                {
-                    field: "id",
-                    title: "场景id",
-                    minWidth: 120,
-                    sort: true,
-                    align: "center",
-                    fixed: "left",
-                },
-                {
-                    field: "username",
-                    title: "场景名称",
-                    align: "center",
-                    minWidth: 120,
-                },
-                {
-                    field: "status",
-                    title: "场景状态",
-                    minWidth: 120,
-                    align: "center",
-                    sort: true,
-                },
-                {
-                    field: "city",
-                    title: "创建时间",
-                    align: "center",
-                    minWidth: 120,
-                },
-                {
-                    field: "sign",
-                    title: "更新时间",
-                    align: "center",
-                    minWidth: 120,
-                },
-                {
-                    field: "operation",
-                    title: "操作",
-                    align: "center",
-                    minWidth: 120,
-                    toolbar: "#operateBar",
-                },
-            ],
-        ],
-    });
-    table.render({
-        elem: "#courseModule",
-        height: 312,
-        url: "../demo.json", //数据接口
-        cols: [
-            [
-                //表头
-                {
-                    field: "id",
-                    title: "场景id",
-                    minWidth: 120,
-                    sort: true,
-                    align: "center",
-                    fixed: "left",
-                },
-                {
-                    field: "username",
-                    title: "场景名称",
-                    align: "center",
-                    minWidth: 120,
-                },
-                {
-                    field: "status",
-                    title: "场景状态",
-                    minWidth: 120,
-                    align: "center",
-                    sort: true,
-                },
-                {
-                    field: "city",
-                    title: "创建时间",
-                    align: "center",
-                    minWidth: 120,
-                },
-                {
-                    field: "sign",
-                    title: "更新时间",
-                    align: "center",
-                    minWidth: 120,
-                },
-                {
-                    field: "operation",
-                    title: "操作",
-                    align: "center",
-                    minWidth: 120,
-                    toolbar: "#operateBar",
-                },
-            ],
-        ],
-        done: function (res, curr, count) {
-            setAttr(res.data);
-        }
-    });
-});
+// 焦点图表格 vue 实例
+var tableUserType = new Vue({
+    el: "#userType",
+    data: {
+        userTypeData: [],
+    },
+    methods: {
+        edit(e) {
+            editBtn(e, this.userTypeData);
+        },
+        upOrDown(status, index) {
+            upOrDownBtn(status, index, this.userTypeData);
+        },
+    },
+    created() {
+        getData();
+    },
+})
 
-// 设置 不同场景状态 不同字段颜色 和 对应不同按钮
-function setAttr(data) {
-    for (let i = 0; i < data.length; i++) {
-        let status = data[i].status; // 获取场景状态
-        if (status == "已上线") {
-            $("table tbody tr[data-index=" + i + "] " + "td[data-field='status']").attr({
-                "style": "color: #3a9bfc"
-            });
-        } else if (status == "未上线") {
-            let num = $("table").length;
-            for (let j = 0; j < num; j++) {
-                let $a = $("table tbody tr[data-index=" + i + "] " + "td[data-field='operation'] " + "div a");
-                $a.eq(j * 2 + 1).attr({
-                    "class": "layui-btn layui-btn-radius layui-btn-normal layui-btn-xs",
-                    "lay-event": "up"
-                });
-                $a.eq(j * 2 + 1).text("上线");
+// 获取用户特征列表请求
+function getData() {
+    $.ajax({
+        url: serverUrl + "/operation/getTypeList",
+        dataType: "json",
+        type: "get",
+        success: res => {
+            if (res.code == 0) {
+                tableUserType.$data.userTypeData = JSON.parse(JSON.stringify(res.data));
+                formatCreateTimeAndUpdateTime(tableUserType.$data.userTypeData);
+                console.log(tableUserType.$data.userTypeData);
+            } else {
+                console.log(res.msg);
             }
+        },
+        fail: res => {
+            console.log(res.msg);
         }
+    });
+}
+
+// 编辑按钮触发的方法
+// e: 事件handler  data: 按钮所在表格的数据
+function editBtn(e, data) {
+    let rowIndex = e.target.parentNode.parentNode.dataset.rowindex;
+    let type = data[rowIndex - 1].type;
+    console.log("type: " + type);
+    window.location.href = './stepEdit.html?type=' + type;
+}
+
+// 上下线按钮触发的方法
+// status: 场景类型 index: 按钮下标  data: 按钮所在表格的数据
+function upOrDownBtn(status, index, data) {
+    // 判断状态
+    if (status == 1) {
+        // 下线操作
+        down(data[index]);
+    } else {
+        // 上线操作
+        up(data[index]);
     }
+}
+
+// 上线操作 data: 操作的那一行数据
+function up(data) {
+    layer.confirm('确认上线该场景吗？', {
+            title: '上线提示',
+        },
+        function (index) {
+            // TODO: 上线请求
+            upOrDownRequest(data);
+            layer.close(index); // 关闭当前 layer 
+        });
+    console.log("上线了", data);
+}
+// 上下线请求
+function upOrDownRequest(data) {
+    $.ajax({
+        url: serverUrl + "/operation/updateTypeStatus",
+        dataType: "json",
+        data: {
+            type: data.type,
+            // 上下线请求 status： 0-下线操作 1-上线操作
+            status: data.status == 0 ? 1 : 0,
+        },
+        type: "get",
+        success: res => {
+            if (res.code == 0) {
+                layer.msg("操作成功！");
+                // 修改视图层
+                data.status = data.status == 0 ? 1 : 0;
+            } else {
+                layer.alert(res.msg);
+                console.log(res.msg);
+            }
+        },
+        fail: res => {
+            layer.alert(res.msg);
+            console.log(res.msg);
+        }
+    })
+}
+
+// 下线操作 data: 操作的那一行数据
+function down(data) {
+    layer.confirm('确认下线该场景吗？', {
+            title: '下线提示',
+        },
+        function (index) {
+            // TODO: 下线请求
+            upOrDownRequest(data);
+            layer.close(index); // 关闭当前 layer 
+        });
+    console.log("下线了", data);
 }

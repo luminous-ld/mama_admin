@@ -1,36 +1,43 @@
-layui.config({
-    base: '../../layui/ext/', // 模块目录
-}).extend({
-    soulTable: 'soulTable' // 模块别名
-});
-layui.config({
-    base: '../../layui/lay/modules/',
-}).extend({
-    tag: 'tag',
-}).use('tag', function () {
-    var tag = layui.tag;
-    tag.on('click(demo)', function (data) {
-        console.log('点击');
-        console.log(this); //当前Tag标签所在的原始DOM元素
-        console.log(data.index); //得到当前Tag的所在下标
-        console.log(data.elem); //得到当前的Tag大容器
-    });
-
-    tag.on('add(demo)', function (data) {
-        console.log('新增');
-        console.log(this); //当前Tag标签所在的原始DOM元素
-        console.log(data.index); //得到当前Tag的所在下标
-        console.log(data.elem); //得到当前的Tag大容器
-        console.log(data.othis); //得到新增的DOM对象
-        //return false; //返回false 取消新增操作； 同from表达提交事件。
-    });
-
-    tag.on('delete(demo)', function (data) {
-        console.log('删除');
-        console.log(this); //当前Tag标签所在的原始DOM元素
-        console.log(data.index); //得到当前Tag的所在下标
-        console.log(data.elem); //得到当前的Tag大容器
-        //return false; //返回false 取消删除操作； 同from表达提交事件。
-    });
-})
 layui.use('element', function () {})
+
+window.addEventListener('load', function() {
+    let login = sessionStorage.getItem('isLogin');
+    if(login == null || login == 'no') {
+        window.location.href = '../login/login.html';
+    }
+})
+
+$('.logout').on('click', function() {
+    layer.confirm('确认退出', function(index) {
+        sessionStorage.setItem('isLogin', 'no');
+        window.location.href = '../login/login.html';
+        layer.close(index);
+    })
+})
+
+$(document).ready(function () {
+
+    $(".animsition").animsition({
+
+        inClass: 'fade-in',
+        outClass: 'fade-out',
+        inDuration: 1500,
+        outDuration: 800,
+        linkElement: '.animsition-link',
+        // e.g. linkElement   :   'a:not([target="_blank"]):not([href^=#])'
+        loading: true,
+        loadingParentElement: 'body', //animsition wrapper element
+        loadingClass: 'animsition-loading',
+        unSupportCss: ['animation-duration',
+            '-webkit-animation-duration',
+            '-o-animation-duration'
+        ],
+        //"unSupportCss" option allows you to disable the "animsition" in case the css property in the array is not supported by your browser.
+        //The default setting is to disable the "animsition" in a browser that does not support "animation-duration".
+
+        overlay: false,
+
+        overlayClass: 'animsition-overlay-slide',
+        overlayParentElement: 'body'
+    });
+});

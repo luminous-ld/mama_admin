@@ -21,8 +21,8 @@
 
 .course-img-btn .change-btn input {
     position: absolute;
-    transform: scale(0.6);
-    left: -54px;
+    transform: scale(0.38);
+    left: -82px;
     top: -1px;
     cursor: pointer;
     opacity: 0;
@@ -30,11 +30,4 @@
 
 .changeSpan {
     color: white;
-    margin-right: 10px;
-}
-
-.delSpan {
-    color: red;
-    margin-left: 10px;
-    cursor: pointer;
 }

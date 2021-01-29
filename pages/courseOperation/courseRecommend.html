@@ -3,10 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../../assets/images/avatar_xhmm.png" rel="icon" type="image/x-icon" />
     <title>课程推荐</title>
     <link rel="stylesheet" href="../../layui/css/layui.css" />
     <link rel="stylesheet" href="../common.css" />
+    <link rel="stylesheet" href="../../dist/animsition.min.css">
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="../../dist/jquery.animsition.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </head>
 
   <body class="layui-layout-body">
@@ -32,7 +36,7 @@
             </a>
             <dl class="layui-nav-child">
               <dd>
-                <a href="">
+                <a class="logout">
                   <i class="layui-icon layui-icon-logout"></i>
                   退出登录
                 </a>
@@ -126,34 +130,51 @@
 
       <div class="layui-body">
         <!-- 内容主体区域 -->
-        <div style="padding: 10px 30px">
+        <div style="padding: 10px 30px" class="animsition">
           <span class="layui-breadcrumb">
-            <a href="">课程运营</a>
+            <a href="./courseRecommend.html" class="animsition-link">课程运营</a>
             <a><cite>课程推荐</cite></a>
           </span>
-          <div class="title">焦点图</div>
-          <table id="focusPic" lay-filter="test"></table>
-          <div class="title">课程模块</div>
-          <table id="courseModule" lay-filter="test"></table>
+          <table id="userType" class="layui-table">
+            <thead>
+              <tr>
+                <th>用户特征</th>
+                <th>创建时间</th>
+                <th>更新时间</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in userTypeData" :key="item.type" :data-rowindex="index + 1">
+                <td>{{item.typeName}}</td>
+                <td>{{item.createTime}}</td>
+                <td>{{item.updateTime}}</td>
+                <td :style="item.status==1?'color: #3a9bfc':''">
+                  {{item.status==1?'已上线':'未上线'}}
+                </td>
+                <td>
+                  <a 
+                    class="layui-btn layui-btn-radius layui-btn-xs"
+                    @click="edit($event)"
+                  >编辑</a>
+                  <a 
+                    class="layui-btn layui-btn-radius layui-btn-xs" 
+                    :style="item.status==1?'background-color: #FFB800':'background-color: #ff2222'"
+                    @click="upOrDown(item.status, index)"
+                  >{{item.status==1?'下线':'上线'}}</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
 
-    <!-- 操作工具栏模板 -->
-    <script type="text/html" id="operateBar">
-      <a class="layui-btn layui-btn-radius layui-btn-xs" lay-event="edit"
-      >编辑</a
-      >
-      <a
-      class="layui-btn layui-btn-radius layui-btn-warm layui-btn-xs"
-      lay-event="del"
-      >下线</a
-      >
-    </script>
     <!-- 引入的js -->
     
     <script src="../../layui/layui.all.js"></script>
     <script type="module" src="../common.js"></script>
-    <script src="./js/courseRecommend.js"></script>
+    <script type="module" src="./js/courseRecommend.js"></script>
   </body>
 </html>

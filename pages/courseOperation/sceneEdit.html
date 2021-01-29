@@ -3,12 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../../assets/images/avatar_xhmm.png" rel="icon" type="image/x-icon" />
     <title>课程推广</title>
     <link rel="stylesheet" href="../../layui/css/layui.css" />
-    <link rel="stylesheet" href="../../layui/css/soulTable.css" />
     <link rel="stylesheet" href="../common.css" />
     <link rel="stylesheet" href="./css/sceneEdit.css" />
+    <link rel="stylesheet" href="../../dist/animsition.min.css">
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+    <script src="../../dist/jquery.animsition.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </head>
 
@@ -35,7 +38,7 @@
             </a>
             <dl class="layui-nav-child">
               <dd>
-                <a href="">
+                <a class="logout">
                   <i class="layui-icon layui-icon-logout"></i>
                   退出登录
                 </a>
@@ -129,11 +132,11 @@
 
       <div class="layui-body">
         <!-- 内容主体区域 -->
-        <div style="padding: 10px 30px">
+        <div style="padding: 10px 30px" class="animsition">
           <!-- 面包屑 -->
           <span class="layui-breadcrumb">
-            <a href="">课程运营</a>
-            <a href="./coursePopularize.html">课程推广</a>
+            <a href="./coursePopularize.html" class="animsition-link">课程运营</a>
+            <a href="./coursePopularize.html" class="animsition-link">课程推广</a>
             <a><cite>场景编辑</cite></a>
           </span>
           <!-- 编辑表格 -->
@@ -142,26 +145,27 @@
             <table v-if="type==1" class="layui-table">
               <thead>
                 <tr>
-                  <td>序号</td>
-                  <td>课程</td>
-                  <td>推广标题</td>
-                  <td>推广封面图</td>
-                  <td>操作</td>
+                  <th>序号</th>
+                  <th>课程</th>
+                  <th>推广标题</th>
+                  <th>推广封面图</th>
+                  <th>操作</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr v-for="item in sceneDetail" :key="item.id" :data-rowindex="item.position">
+              <tbody class="sortable" :key="tableKey">
+                <tr v-for="(item, index) in sceneDetail" :key="index" :data-rowindex="index + 1">
                   <!-- 序号 -->
                   <td>{{item.position}}</td>
                   <!-- 课程下拉框 -->
                   <td>
-                    <select name="courseName" lay-filter="courseName">
-                      <option value="item.courseName">{{item.courseName}}</option>
-                    </select>
+                    <input list="course" :id="item.id" v-model="item.courseName" @change="courseChange($event, index)">
+                    <datalist id="course">
+                        <option v-for="option in courseAll" :value="option.name">
+                    </datalist>
                   </td>
                   <!-- 推广标题可编辑 -->
                   <td>
-                    <input v-model="item.title" />
+                    <input type="text" v-model="item.title" @change="dataChange(index)" />
                   </td>
                   <!-- 推广封面图 -->
                   <td>
@@ -170,7 +174,7 @@
                       <div class="course-img-btn">
                         <label class="change-btn" type="button">                                                    
                           <span id="changeSpan" class="changeSpan">替换</span>
-                          <input type="file" @change="changePic($event)"/>
+                          <input type="file" @change="changePic($event, index)"/>
                         </label>
                       </div>
                     </div>            
@@ -179,7 +183,7 @@
                   <td>
                     <a 
                     class="layui-btn layui-btn-radius layui-btn-xs layui-btn-danger"
-                    @click="delRow($event)"
+                    @click="delRow(index)"
                     >删除</a>
                   </td>
                 </tr>
@@ -189,53 +193,48 @@
             <table v-else-if="type==2" class="layui-table">
               <thead>
                 <tr>
-                  <td>序号</td>
-                  <td>分类标题</td>
-                  <td>课程</td>
-                  <td>操作</td>
+                  <th>序号</th>
+                  <th>分类标题</th>
+                  <th>课程</th>
+                  <th>操作</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr v-for="item in sceneDetail" :key="item.name">
+              <tbody class="sortable" :key="tableKey">
+                <tr v-for="(item, index) in sceneDetail" :key="index" :data-rowindex="index + 1">
                   <!-- 序号 -->
                   <td>{{item.position}}</td>
                   <!-- 分类标题可编辑 -->
-                  <td contenteditable="true">
-                    {{item.name}}
+                  <td>
+                    <input type="text" v-model="item.name" @change="dataChange(index)" />
                   </td>
                   <!-- 课程下拉框和已有课程 -->
                   <td>
-                    <select name="courseName" lay-filter="courseName">
-                      <option value="">----请选择----</option>
-                      <option value="">月子须知</option>
-                      <option value="">孕期必读</option>
-                    </select>
+                    <input list="courseList" :id="index" @change="selectChange($event, index)" >
+                    <datalist id="courseList">
+                        <option v-for="option in courseAll" :value="option.name">
+                    </datalist>
                     <div 
-                      class="layui-btn-container tag"  
-                      lay-filter="demo" 
-                      lay-allowclose="true"
+                      class="layui-btn-container"
                     >
                       <button
                         v-for="list in item.courseList"
                         :key="list.id"
-                        lay-id="11"
-                        type="button" 
-                        class="tag-item"
-                      >{{list.name}}</button>
+                        :data-index="list.position"
+                        class="layui-btn layui-btn-radius layui-btn-primary layui-btn-sm"
+                      >{{list.name}}<i @click="closeTag(item.position ,list.position)" class="layui-icon layui-icon-close tag-close"></i></button>
                     </div>
                   </td>
                   <!-- 操作按钮 -->
                   <td>
                     <a 
                     class="layui-btn layui-btn-radius layui-btn-xs layui-btn-danger"
-                    @click="delRow($event)"
+                    @click="delRow(index)"
                     >删除</a>
                   </td>
                 </tr>
               </tbody>
             </table> 
-          </div>
-            <!-- 添加按钮 -->
+            <!-- 底部按钮 -->
             <div
             style="
               display: flex;
@@ -244,23 +243,27 @@
               margin-top: 15px;
             "
           >
-            <div>
-              <a
-                type="button"
-                class="layui-btn layui-btn-normal layui-btn-radius"
-              >
-                <i class="layui-icon">&#xe608;</i> 添加
-              </a>
-            </div>
-            <div style="margin-top: 20px">
-              <a
-                href="./coursePopularize.html"
-                type="button"
-                class="layui-btn layui-btn-primary"
-              >
-                取消
-              </a>
-              <a type="button" class="layui-btn layui-btn-normal"> 确定 </a>
+              <!-- 添加按钮 -->
+              <div>
+                <a
+                  type="button"
+                  class="layui-btn layui-btn-normal layui-btn-radius"
+                  @click="addRow"
+                >
+                  <i class="layui-icon">&#xe608;</i> 添加
+                </a>
+              </div>
+              <!-- 确定取消按钮 -->
+              <div style="margin-top: 20px">
+                <a
+                  href="./coursePopularize.html"
+                  type="button"
+                  class="layui-btn layui-btn-primary"
+                >
+                  取消
+                </a>
+                <a type="button" class="layui-btn layui-btn-normal" @click="sendRequest" > 确定 </a>
+              </div>
             </div>
           </div>
         </div>

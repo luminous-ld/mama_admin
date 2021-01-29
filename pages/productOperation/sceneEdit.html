@@ -3,10 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../../assets/images/avatar_xhmm.png" rel="icon" type="image/x-icon" />
     <title>文案运营</title>
     <link rel="stylesheet" href="../../layui/css/layui.css" />
     <link rel="stylesheet" href="../common.css" />
+    <link rel="stylesheet" href="../../dist/animsition.min.css">
     <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="../../dist/jquery.animsition.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   </head>
 
@@ -33,7 +37,7 @@
             </a>
             <dl class="layui-nav-child">
               <dd>
-                <a href="">
+                <a class="logout">
                   <i class="layui-icon layui-icon-logout"></i>
                   退出登录
                 </a>
@@ -127,51 +131,78 @@
 
       <div class="layui-body">
         <!-- 内容主体区域 -->
-        <div style="padding: 10px 30px">
+        <div style="padding: 10px 30px" class="animsition">
           <span class="layui-breadcrumb">
-            <a href="">产品运营</a>
-            <a href="./paperOperation.html">文案运营</a>
+            <a href="./paperOperation.html" class="animsition-link">产品运营</a>
+            <a href="./paperOperation.html" class="animsition-link">文案运营</a>
             <a><cite>场景编辑</cite></a>
           </span>
-          <!-- <table id="paper" class="layui-table">
-            <thead>
-              <tr>
-                <td>场景id</td>
-                <td>场景名称</td>
-                <td>场景状态</td>
-                <td>创建时间</td>
-                <td>修改时间</td>
-                <td>操作</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in paperData" :key="item.id">
-                <td>{{item.id}}</td>
-                <td>{{item.name}}</td>
-                <td :style="item.status==1?'color: #3a9bfc':''">
-                  {{item.status==1?'已上线':'未上线'}}
-                </td>
-                <td>{{item.createTime}}</td>
-                <td>{{item.updateTime}}</td>
-                <td>
-                  <a 
-                    class="layui-btn layui-btn-radius layui-btn-xs"
-                    @click="edit($event)"
-                  >编辑</a>
-                  <a 
-                    class="layui-btn layui-btn-radius layui-btn-xs" 
-                    :style="item.status==1?'background-color: #FFB800':'background-color: #ff2222'"
-                    @click="upOrDown(item.status, $event)"
-                  >{{item.status==1?'下线':'上线'}}</a>
-                </td>
-              </tr>
-            </tbody>
-          </table> -->
+          <!-- 编辑表格 -->
+          <div id="sceneEdit">
+            <table class="layui-table">
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>主体文案</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody class="sortable" :key="tableKey">
+                <tr v-for="(item, index) in sceneDetail" :key="index" :data-rowindex="item.position">
+                  <!-- 序号 -->
+                  <td>{{item.position}}</td>
+                  <!-- 分类标题可编辑 -->
+                  <td>
+                    <textarea v-model="item.file" name="Text1" cols="40" rows="3" @change="dataChange(index)"></textarea>
+                  </td>
+                  <!-- 操作按钮 -->
+                  <td>
+                    <a 
+                    class="layui-btn layui-btn-radius layui-btn-xs layui-btn-danger"
+                    @click="delRow(index)"
+                    >删除</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table> 
+            <!-- 底部按钮 -->
+            <div
+            style="
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              margin-top: 15px;
+            "
+          >
+              <!-- 添加按钮 -->
+              <div>
+                <a
+                  type="button"
+                  class="layui-btn layui-btn-normal layui-btn-radius"
+                  @click="addRow"
+                >
+                  <i class="layui-icon">&#xe608;</i> 添加
+                </a>
+              </div>
+              <!-- 确定取消按钮 -->
+              <div style="margin-top: 20px">
+                <a
+                  href="./paperOperation.html"
+                  type="button"
+                  class="layui-btn layui-btn-primary"
+                >
+                  取消
+                </a>
+                <a type="button" class="layui-btn layui-btn-normal" @click="sendRequest"> 确定 </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <!-- 引入的js -->
     <script src="../../layui/layui.all.js"></script>
     <script type="module" src="../common.js"></script>
+    <script type="module" src="./js/sceneEdit.js"></script>
   </body>
 </html>

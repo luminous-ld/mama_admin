@@ -1,0 +1,24 @@
+{
+    "code": 0,
+    "msg": "success",
+    "data": [
+        {
+            "id": 1,
+            "position": 1,
+            "file": "第一，建议多睡觉",
+            "status": 1
+        },
+        {
+            "id": 2,
+            "position": 2,
+            "file": "第二，建议少吃饭",
+            "status": 1
+        },
+        {
+            "id": 3,
+            "position": 3,
+            "file": "第三，建议多读书",
+            "status": 1
+        }
+    ]
+}

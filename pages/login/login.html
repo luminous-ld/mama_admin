@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="../../assets/images/avatar_xhmm.png"
+      rel="icon"
+      type="image/x-icon"
+    />
+    <title>Login</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="./login.css" />
+  </head>
+  <body>
+      <img src="../../assets/images/logo.png" class="logo">
+    <div class="shadowBox">
+      <img src="../../assets/images/fox.png" class="fox" />
+      <img src="../../assets/images/fox2.png" class="fox2" />
+
+      <div class="flexBox">
+        <div class="title">账号登录</div>
+        <label for="">
+          <i class="userIcon"></i>
+          <input type="text" placeholder="请输入用户名" v-model="user" />
+        </label>
+        <label for="">
+          <i class="passIcon"></i>
+          <input type="password" placeholder="请输入密码" v-model="pwd" />
+        </label>
+        <div class="iebox" @click="login">
+            <a id="loginBtn" style="opacity: 1">登录</a>
+        </div>
+      </div>
+    </div>
+    <script src="../../layui/layui.all.js"></script>
+    <script src="./login.js"></script>
+  </body>
+</html>
