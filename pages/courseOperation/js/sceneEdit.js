@@ -18,7 +18,7 @@ let id = parseInt(getRequest().id);
 let ajaxUrl = '';
 if (type == 2) {
     ajaxUrl = serverUrl + "/content/module";
-} else if (type == 3) {
+} else if (type == 1) {
     ajaxUrl = serverUrl + "/content/focus";
 }
 var tableScene = new Vue({
@@ -72,14 +72,14 @@ var tableScene = new Vue({
                 newRow = {
                     position: this.sceneDetail.length + 1,
                     courseId: null,
-                    courseName: '---请选择---',
-                    coverUrl: '',
+                    courseName: '',
+                    coverUrl: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2109206826,900011711&fm=26&gp=0.jpg',
                     status: 1,
-                    title: '请输入标题',
+                    title: '',
                 };
             } else { // 课程模块
                 newRow = {
-                    name: "请输入模块名称",
+                    name: "",
                     position: this.sceneDetail.length + 1,
                     courseList: null,
                     status: 1,
@@ -123,7 +123,10 @@ var tableScene = new Vue({
                     selectCourse = JSON.parse(JSON.stringify(item));
                 }
             })
-            if (isEmpty(selectCourse)) return;
+            if (isEmpty(selectCourse)) {
+                layer.msg('课程不存在！');
+                return;
+            }
             if (this.sceneDetail[index].courseList == null) {
                 this.sceneDetail[index].courseList = [];
             }
@@ -153,9 +156,13 @@ var tableScene = new Vue({
                     selectCourse = JSON.parse(JSON.stringify(item));
                 }
             })
-            if (isEmpty(selectCourse)) return;
+            if (isEmpty(selectCourse)) {
+                layer.msg('课程不存在！');
+                return;
+            }
             this.sceneDetail[index].title = selectCourse.name;
             this.sceneDetail[index].coverUrl = selectCourse.cover;
+            this.sceneDetail[index].courseId = selectCourse.id;
             this.sceneDetail[index].status = 2;
         },
         dataChange(index) {
@@ -166,34 +173,57 @@ var tableScene = new Vue({
             if (isEmpty(finalList)) {
                 finalList = getChangedData(this.sceneDetail, originMap);
             };
-            $.ajax({
-                url: ajaxUrl,
-                data: JSON.stringify({
-                    sceneId: id,
-                    data: finalList,
-                }),
-                dataType: "json",
-                contentType: "application/json;charset=utf-8",
-                type: "post",
-                success: res => {
-                    if (res.code == 0) {
-                        layer.confirm('修改成功', {
+            let idFlag = true;
+            let modFlag = true;
+            if(type == 1) {
+                finalList.forEach(item => {
+                    if(isEmpty(item.courseId)) {
+                        idFlag = false;
+                    }
+                })
+            }else if(type == 2) {
+                finalList.forEach(item => {
+                    if(isEmpty(item.name)) {
+                        modFlag = false;
+                    }
+                })
+            }
+            if(!idFlag) {
+                layer.msg('课程不能为空！');
+            }else if(!modFlag) {
+                layer.msg('模块标题不能为空！');
+            }else {
+                $.ajax({
+                    url: ajaxUrl,
+                    data: JSON.stringify({
+                        sceneId: id,
+                        data: finalList,
+                    }),
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    type: "post",
+                    success: res => {
+                        if (res.code == 0) {
+                            layer.confirm('修改成功', {
                                 title: '修改提示',
                             },
                             function (index) {
                                 window.location.href = './coursePopularize.html'
                                 layer.close(index); // 关闭当前 layer 
                             });
-                    } else {
+                        } else if(res.code == 9001) {
+                            layer.alert('您没有修改任何数据');
+                        } else {
+                            layer.alert('修改失败，请重试');
+                            console.log(res.msg);
+                        }
+                    },
+                    fail: res => {
                         layer.alert('修改失败，请重试');
                         console.log(res.msg);
                     }
-                },
-                fail: res => {
-                    layer.alert('修改失败，请重试');
-                    console.log(res.msg);
-                }
-            });
+                });
+            }
 
         }
     },
@@ -228,11 +258,15 @@ function previewPic(file, row) {
             formdata: formdata,
             doSuccess: res => {
                 layer.msg('上传成功');
-                console.log(res);
+                // console.log(res);
                 tableScene.$data.sceneDetail[row].coverUrl = res;
             },
             doFail: res => {
-                layer.msg('上传失败');
+                if (res.msg.search('Maximum') !== -1) {
+                    layer.msg('图片太大，上传失败');
+                }else {
+                    layer.msg('上传失败');
+                }
             }
         });
     };
@@ -251,6 +285,7 @@ function uploadPic({
         contentType: false, //必须
         processData: false, //必须
         success: res => {
+            // console.log('success:', res);
             if (res.code == 200) {
                 doSuccess(res.data);
             } else {
@@ -258,7 +293,14 @@ function uploadPic({
             }
         },
         fail: res => {
+            // console.log('fail: ', res);
             doFail(res)
+        },
+        complete: res => {
+            console.log('complete: ', res);
+            if(res.status == 400) {
+                doFail(res.responseJSON);
+            }
         }
     });
 }

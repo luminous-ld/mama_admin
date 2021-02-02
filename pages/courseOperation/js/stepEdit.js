@@ -58,7 +58,7 @@ var tableStep = new Vue({
                 "step": this.stepDetail.length + 1,
                 "startDay": "",
                 "endDay": "",
-                "recommendContent": "待编辑描述",
+                "recommendContent": "",
                 "recommendList": null,
                 "recommendCourse": null,
                 "learningCourse": null,
@@ -72,8 +72,8 @@ var tableStep = new Vue({
                 this.stepDetail[this.step].recommendList = [];
             }
             let newRow = {
-                "title": "标题",
-                "description": "描述",
+                "title": "",
+                "description": "",
                 "position": this.stepDetail[this.step].recommendList.length + 1,
                 "status": 1
             }
@@ -130,7 +130,7 @@ var tableStep = new Vue({
                 let id = this.stepDetail[this.step].id;
                 let value = originMap.get(id);
                 value.learningCourse.forEach(item => {
-                    if (item.id == arr[position -1].id) {
+                    if (item.id == arr[position - 1].id) {
                         item.status = 0;
                     }
                 });
@@ -159,7 +159,10 @@ var tableStep = new Vue({
                     selectCourse = JSON.parse(JSON.stringify(item));
                 }
             })
-            if (isEmpty(selectCourse)) return;
+            if (isEmpty(selectCourse)) {
+                layer.msg('课程不存在！');
+                return;
+            }
             if (id == "recipt") {
                 if (this.stepDetail[this.step].recommendCourse == null) {
                     this.stepDetail[this.step].recommendCourse = [];
@@ -300,16 +303,16 @@ var tableStep = new Vue({
                     }
                 }
             } else { // 已有宝宝
-                if (this.step == 0) {
-                    let start = parseInt(this.stepDetail[this.step + 1].startDay);
-                    if (end > start) {
-                        layer.tips('时间区间有交集', '.endDay', {
+                if (this.step == this.stepDetail.length - 1) {
+                    if (end < thisStart) {
+                        layer.tips('应大于左边', '.endDay', {
                             tips: [1, '#000000'] //还可配置颜色
                         });
                     }
-                } else if (this.step == this.stepDetail.length - 1) {
-                    if (end < thisStart) {
-                        layer.tips('应大于左边', '.endDay', {
+                } else if (this.step == 0) {
+                    let start = parseInt(this.stepDetail[this.step + 1].startDay);
+                    if (end > start) {
+                        layer.tips('时间区间有交集', '.endDay', {
                             tips: [1, '#000000'] //还可配置颜色
                         });
                     }
@@ -333,44 +336,71 @@ var tableStep = new Vue({
         },
         // 最后的确定
         sendRequest() {
+            let stepFlag = true;
+            let recFlag = true;
+
             if (isEmpty(finalList)) {
                 finalList = getChangedData(this.stepDetail, originMap);
+                finalList.forEach(item => {
+                    if (isEmpty(item.recommendContent)) {
+                        recFlag = false;
+                    }
+                    if (isEmpty(item.startDay) || isEmpty(item.endDay)) {
+                        stepFlag = false;
+                    }
+                })
                 // 怀孕中，把时间区间的值改回带 - 号
-                if(type == 0) {
+                if (type == 0) {
                     finalList.forEach(item => {
                         item.startDay = '-' + item.startDay;
                         item.endDay = '-' + item.endDay;
                     })
                 }
             };
-            $.ajax({
-                url: serverUrl + "/operation/updateStepList",
-                data: JSON.stringify({
-                    type: type,
-                    data: finalList,
-                }),
-                dataType: "json",
-                contentType: "application/json;charset=utf-8",
-                type: "post",
-                success: res => {
-                    if (res.code == 0) {
-                        layer.confirm('修改成功', {
-                                title: '修改提示',
-                            },
-                            function (index) {
-                                window.location.href = './courseRecommend.html'
-                                layer.close(index); // 关闭当前 layer 
-                            });
-                    } else {
+            finalList.forEach(item => {
+                if (isEmpty(item.recommendContent)) {
+                    recFlag = false;
+                }
+                if (isEmpty(item.startDay) || isEmpty(item.endDay)) {
+                    stepFlag = false;
+                }
+            })
+            if (!stepFlag) {
+                layer.msg('时间区间不能为空！');
+            } else if (!recFlag) {
+                layer.msg('推荐理由不能为空！');
+            } else {
+                $.ajax({
+                    url: serverUrl + "/operation/updateStepList",
+                    data: JSON.stringify({
+                        type: type,
+                        data: finalList,
+                    }),
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    type: "post",
+                    success: res => {
+                        if (res.code == 0) {
+                            layer.confirm('修改成功', {
+                                    title: '修改提示',
+                                },
+                                function (index) {
+                                    window.location.href = './courseRecommend.html'
+                                    layer.close(index); // 关闭当前 layer 
+                                });
+                        } else if (res.code == 9001) {
+                            layer.alert('您没有修改任何数据');
+                        } else {
+                            layer.alert('修改失败，请重试');
+                            console.log(res.msg);
+                        }
+                    },
+                    fail: res => {
                         layer.alert('修改失败，请重试');
                         console.log(res.msg);
                     }
-                },
-                fail: res => {
-                    layer.alert('修改失败，请重试');
-                    console.log(res.msg);
-                }
-            });
+                });
+            }
 
         }
 
@@ -399,8 +429,10 @@ function getStepDetail(type) {
             if (res.code == 0) {
                 tableStep.$data.stepDetail = JSON.parse(JSON.stringify(res.data));
                 tableStep.$data.stepDetail.forEach(item => {
-                    item.startDay = item.startDay.replace(/^\-+/, "");
-                    item.endDay = item.endDay.replace(/^\-+/, "");
+                    if (item.startDay && item.endDay) {
+                        item.startDay = item.startDay.replace(/^\-+/, "");
+                        item.endDay = item.endDay.replace(/^\-+/, "");
+                    }
                 })
                 originData = JSON.parse(JSON.stringify(res.data));
                 originData.forEach(item => {

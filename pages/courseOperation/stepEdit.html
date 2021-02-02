@@ -269,11 +269,11 @@
               <table class="layui-table">
                 <tbody>
                   <tr>
-                    <td colspan="2"><textarea cols="50" rows="2" v-model="stepDetail[step].recommendContent" @change="dataChange"></textarea></td>
+                    <td colspan="2"><textarea placeholder="总描述" cols="50" rows="2" v-model="stepDetail[step].recommendContent" @change="dataChange"></textarea></td>
                   </tr>
                   <tr v-for="list in stepDetail[step].recommendList">
-                    <td style="width: 80px;"><input type="text" v-model="list.title" @change="dataChange"/></td>
-                    <td><textarea cols="50" rows="3" v-model="list.description" @change="dataChange"></textarea></td>
+                    <td style="width: 80px;"><input placeholder="标题" type="text" v-model="list.title" @change="dataChange"/></td>
+                    <td><textarea placeholder="描述" cols="50" rows="3" v-model="list.description" @change="dataChange"></textarea></td>
                   </tr>
                 </tbody>
               </table>
@@ -284,7 +284,7 @@
                   @click="addRecommend"
                   style="width: fit-content;"
                 >
-                  <i class="layui-icon">&#xe608;</i> 添加标题描述行
+                  <i class="layui-icon">&#xe61f;</i> 添加标题描述行
                 </a>
                 <a
                   type="button"
@@ -292,13 +292,13 @@
                   @click="delRecommend"
                   style="width: fit-content;"
                 >
-                  <i class="layui-icon">&#xe608;</i> 删除最后一行
+                  <i class="layui-icon">&#xe616;</i> 删除最后一行
                 </a>
               </div>
               <!-- 推荐课程 -->
               <div>
                 <span class="title">推荐课程</span>
-                <input list="recommend" id="recipt" @change="selectChange($event)" >
+                <input placeholder="请选择(支持检索)" list="recommend" id="recipt" @change="selectChange($event)" >
                 <datalist id="recommend">
                     <option v-for="option in courseAll" :value="option.name">
                 </datalist>
@@ -317,7 +317,7 @@
               <!-- 同阶段妈妈在学 -->
               <div>
                 <span class="title">同阶段妈妈在学</span>
-                <input list="learning" id="leaipt" @change="selectChange($event)">
+                <input placeholder="请选择(支持检索)" list="learning" id="leaipt" @change="selectChange($event)">
                 <datalist id="learning">
                     <option v-for="option in courseAll" :value="option.name">
                 </datalist>

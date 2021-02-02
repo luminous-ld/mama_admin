@@ -158,14 +158,14 @@
                   <td>{{item.position}}</td>
                   <!-- 课程下拉框 -->
                   <td>
-                    <input list="course" :id="item.id" v-model="item.courseName" @change="courseChange($event, index)">
+                    <input placeholder="请选择(支持检索)" list="course" :id="item.id" v-model="item.courseName" @change="courseChange($event, index)">
                     <datalist id="course">
                         <option v-for="option in courseAll" :value="option.name">
                     </datalist>
                   </td>
                   <!-- 推广标题可编辑 -->
                   <td>
-                    <input type="text" v-model="item.title" @change="dataChange(index)" />
+                    <input placeholder="请输入标题" type="text" v-model="item.title" @change="dataChange(index)" />
                   </td>
                   <!-- 推广封面图 -->
                   <td>
@@ -205,11 +205,11 @@
                   <td>{{item.position}}</td>
                   <!-- 分类标题可编辑 -->
                   <td>
-                    <input type="text" v-model="item.name" @change="dataChange(index)" />
+                    <input placeholder="请输入模块标题" type="text" v-model="item.name" @change="dataChange(index)" />
                   </td>
                   <!-- 课程下拉框和已有课程 -->
                   <td>
-                    <input list="courseList" :id="index" @change="selectChange($event, index)" >
+                    <input placeholder="请选择(支持检索)" list="courseList" :id="index" @change="selectChange($event, index)" >
                     <datalist id="courseList">
                         <option v-for="option in courseAll" :value="option.name">
                     </datalist>

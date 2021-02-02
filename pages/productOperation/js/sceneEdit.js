@@ -50,7 +50,7 @@ var tableScene = new Vue({
             let newRow = {
                 position: this.sceneDetail.length + 1,
                 status: 1,
-                file: '请输入文案',
+                file: '',
             };
             this.sceneDetail.push(newRow);
         },
@@ -63,34 +63,44 @@ var tableScene = new Vue({
             if (isEmpty(finalList)) {
                 finalList = getChangedData(this.sceneDetail, originMap);
             };
-            $.ajax({
-                url: serverUrl + "/content/file",
-                data: JSON.stringify({
-                    sceneId: id,
-                    data: finalList,
-                }),
-                dataType: "json",
-                contentType: "application/json;charset=utf-8",
-                type: "post",
-                success: res => {
-                    if (res.code == 0) {
-                        layer.confirm('修改成功', {
-                                title: '修改提示',
-                            },
-                            function (index) {
-                                window.location.href = './paperOperation.html';
-                                layer.close(index); // 关闭当前 layer 
-                            });
-                    } else {
+            let flag = true;
+            finalList.forEach(item => {
+                if (isEmpty(item.file)) {
+                    flag = false;
+                }
+            })
+            if (!flag) {
+                layer.msg('文案不能为空！')
+            } else {
+                $.ajax({
+                    url: serverUrl + "/content/file",
+                    data: JSON.stringify({
+                        sceneId: id,
+                        data: finalList,
+                    }),
+                    dataType: "json",
+                    contentType: "application/json;charset=utf-8",
+                    type: "post",
+                    success: res => {
+                        if (res.code == 0) {
+                            layer.confirm('修改成功', {
+                                    title: '修改提示',
+                                },
+                                function (index) {
+                                    window.location.href = './paperOperation.html';
+                                    layer.close(index); // 关闭当前 layer 
+                                });
+                        } else {
+                            layer.alert('修改失败，请重试');
+                            console.log(res.msg);
+                        }
+                    },
+                    fail: res => {
                         layer.alert('修改失败，请重试');
                         console.log(res.msg);
                     }
-                },
-                fail: res => {
-                    layer.alert('修改失败，请重试');
-                    console.log(res.msg);
-                }
-            });
+                });
+            }
 
         }
     },
