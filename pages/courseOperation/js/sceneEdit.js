@@ -170,29 +170,28 @@ var tableScene = new Vue({
         },
         // 最后的确定
         sendRequest() {
-            if (isEmpty(finalList)) {
-                finalList = getChangedData(this.sceneDetail, originMap);
-            };
+            finalList = JSON.parse(JSON.stringify(getChangedData(this.sceneDetail, originMap)));
+            console.log("finalList: ", finalList);
             let idFlag = true;
             let modFlag = true;
-            if(type == 1) {
+            if (type == 1) {
                 finalList.forEach(item => {
-                    if(isEmpty(item.courseId)) {
+                    if (item.courseId == null) {
                         idFlag = false;
                     }
                 })
-            }else if(type == 2) {
+            } else if (type == 2) {
                 finalList.forEach(item => {
-                    if(isEmpty(item.name)) {
+                    if (item.name == "") {
                         modFlag = false;
                     }
                 })
             }
-            if(!idFlag) {
+            if (!idFlag) {
                 layer.msg('课程不能为空！');
-            }else if(!modFlag) {
+            } else if (!modFlag) {
                 layer.msg('模块标题不能为空！');
-            }else {
+            } else {
                 $.ajax({
                     url: ajaxUrl,
                     data: JSON.stringify({
@@ -205,13 +204,13 @@ var tableScene = new Vue({
                     success: res => {
                         if (res.code == 0) {
                             layer.confirm('修改成功', {
-                                title: '修改提示',
-                            },
-                            function (index) {
-                                window.location.href = './coursePopularize.html'
-                                layer.close(index); // 关闭当前 layer 
-                            });
-                        } else if(res.code == 9001) {
+                                    title: '修改提示',
+                                },
+                                function (index) {
+                                    window.location.href = './coursePopularize.html'
+                                    layer.close(index); // 关闭当前 layer 
+                                });
+                        } else if (res.code == 9001) {
                             layer.alert('您没有修改任何数据');
                         } else {
                             layer.alert('修改失败，请重试');
@@ -264,7 +263,7 @@ function previewPic(file, row) {
             doFail: res => {
                 if (res.msg.search('Maximum') !== -1) {
                     layer.msg('图片太大，上传失败');
-                }else {
+                } else {
                     layer.msg('上传失败');
                 }
             }
@@ -298,7 +297,7 @@ function uploadPic({
         },
         complete: res => {
             console.log('complete: ', res);
-            if(res.status == 400) {
+            if (res.status == 400) {
                 doFail(res.responseJSON);
             }
         }

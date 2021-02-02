@@ -60,9 +60,7 @@ var tableScene = new Vue({
         },
         // 最后的确定
         sendRequest() {
-            if (isEmpty(finalList)) {
-                finalList = getChangedData(this.sceneDetail, originMap);
-            };
+            finalList = JSON.parse(JSON.stringify(getChangedData(this.sceneDetail, originMap)));
             let flag = true;
             finalList.forEach(item => {
                 if (isEmpty(item.file)) {

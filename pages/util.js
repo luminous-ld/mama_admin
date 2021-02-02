@@ -388,11 +388,12 @@ export function tableDrag(vue, selector) {
 
 /**
  * 
- * @param {Array} uiList 场景控制ui的数据
- * @param {Map} originMap 场景原始数据Map
+ * @param {Array} _uiList 场景控制ui的数据
+ * @param {Map} _originMap 场景原始数据Map
  */
 
-export function getChangedData(uiList, originMap) {
+export function getChangedData(_uiList, originMap) {
+  let uiList = JSON.parse(JSON.stringify(_uiList));
   let deleteList = [];
   let addList = [];
   let editList = [];

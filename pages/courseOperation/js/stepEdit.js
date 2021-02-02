@@ -338,25 +338,8 @@ var tableStep = new Vue({
         sendRequest() {
             let stepFlag = true;
             let recFlag = true;
+            finalList = JSON.parse(JSON.stringify(getChangedData(this.stepDetail, originMap)));
 
-            if (isEmpty(finalList)) {
-                finalList = getChangedData(this.stepDetail, originMap);
-                finalList.forEach(item => {
-                    if (isEmpty(item.recommendContent)) {
-                        recFlag = false;
-                    }
-                    if (isEmpty(item.startDay) || isEmpty(item.endDay)) {
-                        stepFlag = false;
-                    }
-                })
-                // 怀孕中，把时间区间的值改回带 - 号
-                if (type == 0) {
-                    finalList.forEach(item => {
-                        item.startDay = '-' + item.startDay;
-                        item.endDay = '-' + item.endDay;
-                    })
-                }
-            };
             finalList.forEach(item => {
                 if (isEmpty(item.recommendContent)) {
                     recFlag = false;
@@ -365,6 +348,13 @@ var tableStep = new Vue({
                     stepFlag = false;
                 }
             })
+            // 怀孕中，把时间区间的值改回带 - 号
+            if (type == 0) {
+                finalList.forEach(item => {
+                    item.startDay = '-' + item.startDay;
+                    item.endDay = '-' + item.endDay;
+                })
+            }
             if (!stepFlag) {
                 layer.msg('时间区间不能为空！');
             } else if (!recFlag) {
