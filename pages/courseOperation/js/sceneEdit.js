@@ -192,6 +192,7 @@ var tableScene = new Vue({
             } else if (!modFlag) {
                 layer.msg('模块标题不能为空！');
             } else {
+                let load = layer.load(0);
                 $.ajax({
                     url: ajaxUrl,
                     data: JSON.stringify({
@@ -204,12 +205,12 @@ var tableScene = new Vue({
                     success: res => {
                         if (res.code == 0) {
                             layer.confirm('修改成功', {
-                                    title: '修改提示',
-                                },
-                                function (index) {
-                                    window.location.href = './coursePopularize.html'
-                                    layer.close(index); // 关闭当前 layer 
-                                });
+                                title: '修改提示',
+                            },
+                            function (index) {
+                                window.location.href = './coursePopularize.html'
+                                layer.close(index); // 关闭当前 layer 
+                            });
                         } else if (res.code == 9001) {
                             layer.alert('您没有修改任何数据');
                         } else {
@@ -220,6 +221,12 @@ var tableScene = new Vue({
                     fail: res => {
                         layer.alert('修改失败，请重试');
                         console.log(res.msg);
+                    },
+                    complete: res => {
+                        layer.close(load);
+                        if(res.status == 500) {
+                            layer.msg('接口挂了，雨我无瓜！');
+                        }
                     }
                 });
             }
@@ -232,7 +239,6 @@ var tableScene = new Vue({
     },
     mounted() {
         tableDrag(this, '.sortable');
-
     },
     updated() {
         $('.sortable').sortable({
@@ -253,14 +259,17 @@ function previewPic(file, row) {
     reader.onload = function (e) {
         let formdata = new FormData();
         formdata.append('file', file);
+        let load = layer.load(0);
         uploadPic({
             formdata: formdata,
             doSuccess: res => {
+                layer.close(load);
                 layer.msg('上传成功');
                 // console.log(res);
                 tableScene.$data.sceneDetail[row].coverUrl = res;
             },
             doFail: res => {
+                layer.close(load);
                 if (res.msg.search('Maximum') !== -1) {
                     layer.msg('图片太大，上传失败');
                 } else {
@@ -308,6 +317,7 @@ function uploadPic({
 // 获取场景详情的请求
 // id: 场景id  type: 场景类型 1-焦点图 2-课程模块 3-文案
 function getSceneDetail(id, type) {
+    let load = layer.load(0);
     $.ajax({
         url: serverUrl + "/scene/getSceneDetail",
         data: {
@@ -329,6 +339,12 @@ function getSceneDetail(id, type) {
         },
         fail: res => {
             console.log(res.msg);
+        },
+        complete: res => {
+            layer.close(load);
+            if(res.status == 500) {
+                layer.msg('接口挂了，雨我无瓜！');
+            }
         }
     });
 }

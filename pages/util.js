@@ -255,6 +255,7 @@ function down(data) {
 
 // 上下线请求
 function upOrDownRequest(data) {
+  let load = layer.load(0);
   $.ajax({
     url: serverUrl + "/scene/updateSceneStatus",
     dataType: "json",
@@ -277,6 +278,12 @@ function upOrDownRequest(data) {
     fail: res => {
       layer.alert(res.msg);
       console.log(res.msg);
+    },
+    complete: res => {
+      layer.close(load);
+      if (res.status == 500) {
+        layer.msg('接口挂了，雨我无瓜！');
+      }
     }
   })
 }
@@ -355,7 +362,7 @@ export function tableDrag(vue, selector) {
     revert: true, //释放时，增加动画  
   });
   // $(selector).disableSelection();
-  $(document).bind('sortupdate', '.selector', function (e, ui) {
+  $(document).bind('sortupdate', selector, function (e, ui) {
     let oldRow = ui.item.context.dataset.rowindex;
     let newRow = ui.item.context.rowIndex;
     console.log("oldRow: " + oldRow); // 移动的行的position

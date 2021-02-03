@@ -46,6 +46,7 @@ var tableCourseModule = new Vue({
 // 获取场景列表请求
 // type: 1-焦点图 2-课程模块  vue: 表格对象实例
 function getData(type, vue) {
+    let load = layer.load(0);
     $.ajax({
         url: serverUrl + "/scene/getSceneListByType",
         data: {
@@ -70,6 +71,12 @@ function getData(type, vue) {
         },
         fail: res => {
             console.log(res.msg);
+        },
+        complete: res => {
+            layer.close(load);
+            if (res.status == 500) {
+                layer.msg('接口挂了，雨我无瓜！');
+            }
         }
     });
 }

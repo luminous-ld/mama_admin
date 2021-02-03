@@ -360,6 +360,7 @@ var tableStep = new Vue({
             } else if (!recFlag) {
                 layer.msg('推荐理由不能为空！');
             } else {
+                let load = layer.load(0);
                 $.ajax({
                     url: serverUrl + "/operation/updateStepList",
                     data: JSON.stringify({
@@ -372,12 +373,12 @@ var tableStep = new Vue({
                     success: res => {
                         if (res.code == 0) {
                             layer.confirm('修改成功', {
-                                    title: '修改提示',
-                                },
-                                function (index) {
-                                    window.location.href = './courseRecommend.html'
-                                    layer.close(index); // 关闭当前 layer 
-                                });
+                                title: '修改提示',
+                            },
+                            function (index) {
+                                window.location.href = './courseRecommend.html'
+                                layer.close(index); // 关闭当前 layer 
+                            });
                         } else if (res.code == 9001) {
                             layer.alert('您没有修改任何数据');
                         } else {
@@ -388,6 +389,12 @@ var tableStep = new Vue({
                     fail: res => {
                         layer.alert('修改失败，请重试');
                         console.log(res.msg);
+                    },
+                    complete: res => {
+                        layer.close(load);
+                        if (res.status == 500) {
+                            layer.msg('接口挂了，雨我无瓜！');
+                        }
                     }
                 });
             }
@@ -408,6 +415,7 @@ var tableStep = new Vue({
 // 获取阶段详情列表的请求
 // type: 特征值
 function getStepDetail(type) {
+    let load = layer.load(0);
     $.ajax({
         url: serverUrl + "/operation/getStepList",
         data: {
@@ -434,6 +442,12 @@ function getStepDetail(type) {
         },
         fail: res => {
             console.log(res.msg);
+        },
+        complete: res => {
+            layer.close(load);
+            if (res.status == 500) {
+                layer.msg('接口挂了，雨我无瓜！');
+            }
         }
     });
 }

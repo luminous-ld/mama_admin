@@ -24,6 +24,7 @@ var tableUserType = new Vue({
 
 // 获取用户特征列表请求
 function getData() {
+    let load = layer.load(0);
     $.ajax({
         url: serverUrl + "/operation/getTypeList",
         dataType: "json",
@@ -39,6 +40,12 @@ function getData() {
         },
         fail: res => {
             console.log(res.msg);
+        },
+        complete: res => {
+            layer.close(load);
+            if (res.status == 500) {
+                layer.msg('接口挂了，雨我无瓜！');
+            }
         }
     });
 }
@@ -79,6 +86,7 @@ function up(data) {
 }
 // 上下线请求
 function upOrDownRequest(data) {
+    let load = layer.load(0);
     $.ajax({
         url: serverUrl + "/operation/updateTypeStatus",
         dataType: "json",
@@ -101,6 +109,12 @@ function upOrDownRequest(data) {
         fail: res => {
             layer.alert(res.msg);
             console.log(res.msg);
+        },
+        complete: res => {
+            layer.close(load);
+            if (res.status == 500) {
+                layer.msg('接口挂了，雨我无瓜！');
+            }
         }
     })
 }

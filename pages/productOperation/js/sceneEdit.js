@@ -70,6 +70,7 @@ var tableScene = new Vue({
             if (!flag) {
                 layer.msg('文案不能为空！')
             } else {
+                let load = layer.load(0);
                 $.ajax({
                     url: serverUrl + "/content/file",
                     data: JSON.stringify({
@@ -82,12 +83,12 @@ var tableScene = new Vue({
                     success: res => {
                         if (res.code == 0) {
                             layer.confirm('修改成功', {
-                                    title: '修改提示',
-                                },
-                                function (index) {
-                                    window.location.href = './paperOperation.html';
-                                    layer.close(index); // 关闭当前 layer 
-                                });
+                                title: '修改提示',
+                            },
+                            function (index) {
+                                window.location.href = './paperOperation.html';
+                                layer.close(index); // 关闭当前 layer 
+                            });
                         } else {
                             layer.alert('修改失败，请重试');
                             console.log(res.msg);
@@ -96,6 +97,12 @@ var tableScene = new Vue({
                     fail: res => {
                         layer.alert('修改失败，请重试');
                         console.log(res.msg);
+                    },
+                    complete: res => {
+                        layer.close(load);
+                        if (res.status == 500) {
+                            layer.msg('接口挂了，雨我无瓜！');
+                        }
                     }
                 });
             }
@@ -125,6 +132,7 @@ var tableScene = new Vue({
 // 获取场景详情的请求
 // id: 场景id  type: 场景类型 0-焦点图 1-课程模块 2-文案
 function getSceneDetail(id, type) {
+    let load = layer.load(0);
     $.ajax({
         url: serverUrl + "/scene/getSceneDetail",
         data: {
@@ -146,6 +154,12 @@ function getSceneDetail(id, type) {
         },
         fail: res => {
             console.log(res.msg);
+        },
+        complete: res => {
+            layer.close(load);
+            if (res.status == 500) {
+                layer.msg('接口挂了，雨我无瓜！');
+            }
         }
     });
 }
